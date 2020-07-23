@@ -12,7 +12,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "po",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -25,7 +25,12 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
+              }
             ],
             "styles": [
               "src/styles.less"
@@ -123,6 +128,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "po-web"
 }

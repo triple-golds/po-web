@@ -1,0 +1,39 @@
+<div class="buttom-area">
+  <nz-space>
+    <nz-space-item>
+      <button nz-button nzType="primary" (click)="createRow()">增加</button>
+    </nz-space-item>
+    <nz-space-item>
+      <button nz-button nzType="primary" (click)="showModal()">表格导入</button>
+    </nz-space-item>
+  </nz-space>
+</div>
+
+<po-basic-table [poData]="tableData" [poHeader]="tableHeader" (poModify)="modifyRow($event)"
+  (poDelete)="deleteRow($event)"></po-basic-table>
+
+<nz-drawer [nzMaskClosable]="false" [nzVisible]="drawerConfig.visible" [nzTitle]="drawerConfig.title" [nzWidth]="650"
+  (nzOnClose)="closeDrawer()">
+  <!-- <po-basic-form [formGroup]="formGroup" [formLabel]="formLabel" (submited)="submitForm($event)"></po-basic-form> -->
+  <po-basic-form [items]="formItems" (submited)="submitForm($event)"></po-basic-form>
+</nz-drawer>
+
+<nz-modal [(nzVisible)]="modalConfig.visible" nzTitle="表格导入" nzWidth="90%" nzMaskClosable="false"
+  [nzFooter]="modalFooter" (nzOnCancel)="closeModal()">
+
+  <ng-container *ngIf="!!importText; else elseBlock">
+    <p class="error" *ngIf="importErrorMsg">{{importErrorMsg}}</p>
+    <po-bare-table [poData]="importTableData" [poHeader]="tableHeader"></po-bare-table>
+  </ng-container>
+
+  <ng-template #elseBlock>
+    <p>请复制表格里的内容并粘贴到以下输入框中</p>
+    <textarea [(ngModel)]="importText" nz-input rows="4" (ngModelChange)="textOnChange()"></textarea>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="showModal()">重新粘贴</button>
+    <button nz-button nzType="primary" (click)="handleOk()">导入</button>
+  </ng-template>
+
+</nz-modal>

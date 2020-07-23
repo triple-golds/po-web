@@ -1,0 +1,37 @@
+<nz-layout class="app-layout">
+  <nz-header class="header">
+    <div nz-row>
+      <!-- <div nz-col nzSpan="12"> -->
+      <div><img class="logo" src="/assets/gonghui.png" /></div>
+      <div class="title">合肥鑫晟工会工作平台</div>
+      <!-- </div> -->
+    </div>
+  </nz-header>
+  <nz-content class="outer-content">
+
+    <nz-layout class="inner-layout">
+      <nz-sider nzWidth="200px" nzTheme="light" class="sider">
+        <nz-tree #nzTreeComponent [nzData]="nodes" [nzSelectedKeys]="defaultSelectedKeys"
+          [nzExpandedKeys]="defaultExpandedKeys" (nzClick)="nodeClick($event)">
+        </nz-tree>
+      </nz-sider>
+      <nz-content class="inner-content">
+        <nz-tabset>
+          <nz-tab nzTitle="入会流程">
+            <img src="/assets/enter-flow.jpg" />
+          </nz-tab>
+          <nz-tab nzTitle="会员名册">
+            <po-trade-union-staff [teamNode]="teamNode"></po-trade-union-staff>
+          </nz-tab>
+          <!-- <nz-tab nzTitle="阳光基金">
+            <po-trade-union-fund [teamNode]="teamNode"></po-trade-union-fund>
+          </nz-tab>
+          <nz-tab nzTitle="新婚新育喜事">
+            <po-trade-union-marriage [teamNode]="teamNode"></po-trade-union-marriage>
+          </nz-tab> -->
+        </nz-tabset>
+      </nz-content>
+    </nz-layout>
+
+  </nz-content>
+</nz-layout>

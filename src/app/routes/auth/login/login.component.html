@@ -1,0 +1,30 @@
+<nz-layout>
+  <nz-content>
+    <div class="welcome">
+      <!-- <img src="assets/BOE-logo-black.png" /> -->
+      <!-- <nz-divider nzType="vertical"></nz-divider> -->
+      <span class="title">{{title}}</span>
+    </div>
+    <form class="login-form" nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="请输入用户名!">
+          <nz-input-group nzPrefixIcon="user">
+            <input type="text" nz-input formControlName="username" placeholder="用户名">
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="请输入密码!">
+          <nz-input-group nzPrefixIcon="lock">
+            <input type="password" nz-input formControlName="password" placeholder="密码">
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button class="login-form-button" nzType='primary' [nzLoading]="isLoading">登录</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </nz-content>
+</nz-layout>
