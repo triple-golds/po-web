@@ -1,0 +1,15 @@
+export const political = [
+  { key: 1, value: '中共党员' },
+  { key: 2, value: '中共预备党员' },
+  { key: 3, value: '共青团员' },
+  { key: 4, value: '民革会员' },
+  { key: 5, value: '民盟盟员' },
+  { key: 6, value: '民建会员' },
+  { key: 7, value: '民进会员' },
+  { key: 8, value: '农工党党员' },
+  { key: 9, value: '致公党党员' },
+  { key: 10, value: '九三学社社员' },
+  { key: 11, value: '台盟盟员' },
+  { key: 12, value: '无党派民主人士' },
+  { key: 13, value: '群众' },
+]

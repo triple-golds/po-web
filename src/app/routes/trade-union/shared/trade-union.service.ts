@@ -48,7 +48,7 @@ export class TradeUnionService {
   }
 
   modifyData(url: string, body: any) {
-    return this.http.put(url, body);
+    return this.http.patch(url, body);
   }
 
   manageTreeNode(treeData: any[]): NzTreeNodeOptions[] {

@@ -38,22 +38,16 @@ export class AuthenticationService {
     formData.append('password', password);
 
     return this.http.post<any>('/login', formData).pipe(
-      tap(_ => localStorage.setItem('username', username)),
       switchMap(v => this.getUserInfo())
     );
   }
 
   logout() {
     this.userInfo = null;
-    localStorage.removeItem('username');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   private getUserInfo(): Observable<UserInfo> {
-    if (!localStorage.getItem('username')) {
-      return of(null);
-    }
-
     return this.http.get<UserInfo>(`/userInfoes/search/findByCurrentUser`)
       .pipe(
         tap((res: any) => {

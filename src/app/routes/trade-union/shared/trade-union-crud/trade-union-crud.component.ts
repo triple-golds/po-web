@@ -1,10 +1,12 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, TemplateRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { TradeUnionService } from '../trade-union.service';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { FormItemBase } from '@shared/components/form/form-util/form-item-base';
 import { BasicFormComponent } from '@shared/components/form/basic-form.componet';
 import { TableHeaderBase } from '@shared/components/table/table-util/table-header-base';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzDrawerService, NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 export enum FormAction { create, modify, delete }
 
@@ -15,24 +17,6 @@ export enum FormAction { create, modify, delete }
 })
 export class TradeUnionCrudComponent {
 
-
-  @ViewChild(BasicFormComponent)
-  private formComponent: BasicFormComponent;
-
-  // 当前操作条目方法
-  private itemCurrentAction: FormAction;
-  // 当前操作条目的url
-  private itemCurrentUrl: string;
-  // 当前工会小组links信息
-  private teamLinks: any;
-
-  drawerConfig: { visible: boolean, title?: string } = { visible: false };
-  modalConfig = { visible: false };
-  tableData: any[];
-  importTableData: any[];
-  importText: string;
-  importErrorMsg: string;
-
   @Input()
   subject: string;
 
@@ -40,7 +24,10 @@ export class TradeUnionCrudComponent {
   tableHeader: TableHeaderBase<any>[];
 
   @Input()
-  formItems: FormItemBase<any>[];
+  cFormItems: FormItemBase<any>[];
+
+  @Input()
+  mFormItems: FormItemBase<any>[];
 
   @Input()
   set teamNode(teamNode: NzTreeNodeOptions) {
@@ -51,8 +38,33 @@ export class TradeUnionCrudComponent {
     }
   }
 
+  @ViewChild('drawerTemplate', { static: false })
+  drawerTemplate: TemplateRef<any>;
+
+  // 当前操作条目方法
+  private itemCurrentAction: FormAction;
+  // 当前操作条目的url
+  private itemCurrentUrl: string;
+  // 当前工会小组links信息
+  private teamLinks: any;
+
+  // drawerConfig: { visible: boolean, title?: string } = { visible: false };
+  modalConfig = { visible: false };
+  tableData: any[];
+  importTableData: any[];
+  importText: string;
+  importErrorMsg: string;
+
+
+  // 点击创建或修改时，指向当前的数据
+  formItems: FormItemBase<any>[];
+
+
+
   constructor(
-    private tus: TradeUnionService
+    private tus: TradeUnionService,
+    private message: NzMessageService,
+    private drawerService: NzDrawerService
   ) { }
 
   refreshTable() {
@@ -71,22 +83,38 @@ export class TradeUnionCrudComponent {
     this.importErrorMsg = '';
   }
 
-  createRow() {
+  showCreateDrawer() {
     this.itemCurrentAction = FormAction.create;
     this.itemCurrentUrl = `/${this.subject}`;
-
-    this.drawerConfig.visible = true;
-    this.drawerConfig.title = '新建';
-    this.formComponent.resetForm();
+    this.formItems = this.cFormItems;
+    const drawerRef = this.drawerService.create({
+      nzTitle: '新建',
+      nzWidth: 650,
+      nzMaskClosable: false,
+      nzContent: this.drawerTemplate,
+    });
   }
 
-  modifyRow(rowData: any) {
+  showModifyDrawer(rowData: any) {
     this.itemCurrentAction = FormAction.modify;
     this.itemCurrentUrl = rowData._links.self.href;
-
-    this.drawerConfig.visible = true;
-    this.drawerConfig.title = '修改';
-    this.formComponent.setFormVal(rowData);
+    this.mFormItems.forEach((item: FormItemBase<any>) => {
+      item.value = '';
+      for (const key in rowData) {
+        if (key == item.key) {
+          item.value = rowData[key];
+          break;
+        }
+      }
+    })
+    this.formItems = this.mFormItems;
+    console.log(this.formItems);
+    const drawerRef = this.drawerService.create({
+      nzTitle: '修改',
+      nzWidth: 650,
+      nzMaskClosable: false,
+      nzContent: this.drawerTemplate,
+    });
   }
 
   deleteRow(rowData: any) {
@@ -95,39 +123,38 @@ export class TradeUnionCrudComponent {
 
     this.tus.deletetData(rowData._links.self.href).subscribe(
       (res) => {
-        this.closeDrawer();
+        this.message.success('删除成功');
+        this.refreshTable();
       }
     );
   }
 
-  submitForm(formGroup: FormGroup) {
+  submitForm(formGroup: FormGroup, drawerRef: NzDrawerRef) {
     const body = formGroup.value;
-    switch (this.itemCurrentAction) {
 
+    switch (this.itemCurrentAction) {
       case FormAction.create:
         body.team = this.teamLinks.self.href;
         this.tus.insertData(this.itemCurrentUrl, body).subscribe(
           () => {
-            this.closeDrawer();
+            this.message.success('增加成功');
+            drawerRef.close();
+            this.refreshTable();
           }
         );
         break;
-
       case FormAction.modify:
         this.tus.modifyData(this.itemCurrentUrl, body).subscribe(
           () => {
-            this.closeDrawer();
+            this.message.success('修改成功');
+            drawerRef.close();
+            this.refreshTable();
           }
         );
         break;
-
     }
   }
 
-  closeDrawer() {
-    this.drawerConfig.visible = false;
-    this.refreshTable();
-  }
 
   handleOk(): void {
     this.itemCurrentUrl = `/${this.subject}`;
@@ -158,6 +185,7 @@ export class TradeUnionCrudComponent {
             if (rowTextList[i] && rowTextList[i].trim()) {
               let v: string | Date = rowTextList[i].trim();
               // console.log('this.tableHeader[i].value', this.tableHeader[i].value)
+              if(this.tableHeader[i].label)
               if (this.tableHeader[i].type === 'date') {
                 v = new Date(v);
                 // console.log('v',v.toString());

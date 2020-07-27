@@ -13,6 +13,7 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 import { BasicTableComponent } from './components/table/basic-table.component';
 import { BasicFormComponent } from './components/form/basic-form.componet';
@@ -30,7 +31,8 @@ const ngZorroModule = [
   NzDatePickerModule,
   NzPopconfirmModule,
   NzModalModule,
-  NzRadioModule
+  NzRadioModule,
+  NzSelectModule
 ];
 
 // 导出常用的模块，被其它特性模块引用

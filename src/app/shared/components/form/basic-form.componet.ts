@@ -28,6 +28,7 @@ export class BasicFormComponent implements OnInit {
   constructor(private fcs: FormControlService) { }
 
   ngOnInit() {
+    console.log('BasicFormComponent', this.items);
     this.form = this.fcs.toFormGroup(this.items);
   }
 

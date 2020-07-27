@@ -9,7 +9,7 @@ import { TableHeaderDate } from '@shared/components/table/table-util/table-heade
 @Component({
   selector: 'po-trade-union-fund',
   template: `
-    <po-trade-union-crud [subject]="subject" [tableHeader]="tableHeader" [formItems]="formItems" [teamNode]="teamNode"></po-trade-union-crud>
+    <!-- <po-trade-union-crud [subject]="subject" [tableHeader]="tableHeader" [formItems]="formItems" [teamNode]="teamNode"></po-trade-union-crud> -->
   `,
   styles: []
 })
